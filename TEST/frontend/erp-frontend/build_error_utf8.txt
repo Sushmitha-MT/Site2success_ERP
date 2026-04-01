@@ -1,0 +1,40 @@
+﻿
+> erp-frontend@0.0.0 build
+> tsc && vite build
+
+src/api/axiosInstance.ts(1,19): error TS2307: Cannot find module 'axios' or its corresponding type declarations.
+src/api/axiosInstance.ts(4,24): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/api/axiosInstance.ts(9,4): error TS7006: Parameter 'config' implicitly has an 'any' type.
+src/api/axiosInstance.ts(16,4): error TS7006: Parameter 'error' implicitly has an 'any' type.
+src/api/axiosInstance.ts(21,4): error TS7006: Parameter 'response' implicitly has an 'any' type.
+src/api/axiosInstance.ts(22,4): error TS7006: Parameter 'error' implicitly has an 'any' type.
+src/App.tsx(2,31): error TS2307: Cannot find module 'react-router-dom' or its corresponding type declarations.
+src/App.tsx(3,50): error TS2307: Cannot find module '@tanstack/react-query' or its corresponding type declarations.
+src/components/layout/MainLayout.tsx(2,24): error TS2307: Cannot find module 'react-router-dom' or its corresponding type declarations.
+src/components/layout/Navbar.tsx(2,48): error TS2307: Cannot find module 'lucide-react' or its corresponding type declarations.
+src/components/layout/Sidebar.tsx(2,35): error TS2307: Cannot find module 'react-router-dom' or its corresponding type declarations.
+src/components/layout/Sidebar.tsx(11,8): error TS2307: Cannot find module 'lucide-react' or its corresponding type declarations.
+src/components/layout/Sidebar.tsx(13,39): error TS2307: Cannot find module 'clsx' or its corresponding type declarations.
+src/components/layout/Sidebar.tsx(14,25): error TS2307: Cannot find module 'tailwind-merge' or its corresponding type declarations.
+src/components/ProtectedRoute.tsx(2,39): error TS2307: Cannot find module 'react-router-dom' or its corresponding type declarations.
+src/context/AuthContext.tsx(2,27): error TS2307: Cannot find module 'jwt-decode' or its corresponding type declarations.
+src/main.tsx(2,22): error TS2307: Cannot find module 'react-dom/client' or its corresponding type declarations.
+src/pages/CRM.tsx(2,26): error TS2307: Cannot find module '@tanstack/react-query' or its corresponding type declarations.
+src/pages/CRM.tsx(4,60): error TS2307: Cannot find module 'lucide-react' or its corresponding type declarations.
+src/pages/Dashboard.tsx(2,26): error TS2307: Cannot find module '@tanstack/react-query' or its corresponding type declarations.
+src/pages/Dashboard.tsx(11,8): error TS2307: Cannot find module 'lucide-react' or its corresponding type declarations.
+src/pages/Dashboard.tsx(21,8): error TS2307: Cannot find module 'recharts' or its corresponding type declarations.
+src/pages/Finance.tsx(2,26): error TS2307: Cannot find module '@tanstack/react-query' or its corresponding type declarations.
+src/pages/Finance.tsx(4,81): error TS2307: Cannot find module 'lucide-react' or its corresponding type declarations.
+src/pages/Finance.tsx(134,49): error TS2304: Cannot find name 'CheckCircle'.
+src/pages/Finance.tsx(135,51): error TS2304: Cannot find name 'ArrowUpRight'.
+src/pages/Finance.tsx(136,47): error TS2304: Cannot find name 'ProjectIcon'.
+src/pages/Login.tsx(2,42): error TS2307: Cannot find module 'react-router-dom' or its corresponding type declarations.
+src/pages/Login.tsx(5,48): error TS2307: Cannot find module 'lucide-react' or its corresponding type declarations.
+src/pages/Products.tsx(2,80): error TS2307: Cannot find module 'lucide-react' or its corresponding type declarations.
+src/pages/Products.tsx(93,34): error TS2307: Cannot find module 'lucide-react' or its corresponding type declarations.
+src/pages/Projects.tsx(2,26): error TS2307: Cannot find module '@tanstack/react-query' or its corresponding type declarations.
+src/pages/Projects.tsx(4,58): error TS2307: Cannot find module 'lucide-react' or its corresponding type declarations.
+src/pages/Unauthorized.tsx(2,35): error TS2307: Cannot find module 'lucide-react' or its corresponding type declarations.
+src/pages/Unauthorized.tsx(3,22): error TS2307: Cannot find module 'react-router-dom' or its corresponding type declarations.
+src/routes/AppRoutes.tsx(2,41): error TS2307: Cannot find module 'react-router-dom' or its corresponding type declarations.

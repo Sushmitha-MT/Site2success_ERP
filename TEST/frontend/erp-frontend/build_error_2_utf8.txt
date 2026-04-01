@@ -1,0 +1,8 @@
+﻿
+> erp-frontend@0.0.0 build
+> tsc && vite build
+
+node_modules/recharts/types/chart/generateCategoricalChart.d.ts(2,36): error TS7016: Could not find a declaration file for module 'lodash'. 'C:/Users/pavan/Downloads/erp-backend/erp-frontend/node_modules/lodash/lodash.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/lodash` if it exists or add a new declaration (.d.ts) file containing `declare module 'lodash';`
+src/api/axiosInstance.ts(4,24): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/pages/Dashboard.tsx(5,3): error TS2724: '"lucide-react"' has no exported member named 'Project'. Did you mean 'Projector'?

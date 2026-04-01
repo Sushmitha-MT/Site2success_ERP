@@ -1,0 +1,22 @@
+﻿
+> erp-frontend@0.0.0 build
+> tsc && vite build
+
+node_modules/vite/client.d.ts(8,18): error TS2300: Duplicate identifier 'classes'.
+node_modules/vite/client.d.ts(12,18): error TS2300: Duplicate identifier 'classes'.
+node_modules/vite/client.d.ts(16,18): error TS2300: Duplicate identifier 'classes'.
+node_modules/vite/client.d.ts(63,18): error TS2300: Duplicate identifier 'src'.
+node_modules/vite/client.d.ts(67,18): error TS2300: Duplicate identifier 'src'.
+node_modules/vite/client.d.ts(71,18): error TS2300: Duplicate identifier 'src'.
+node_modules/vite/client.d.ts(87,18): error TS2300: Duplicate identifier 'src'.
+node_modules/vite/client.d.ts(91,18): error TS2300: Duplicate identifier 'src'.
+node_modules/vite/client.d.ts(99,18): error TS2300: Duplicate identifier 'src'.
+src/react-app-env.d.ts(27,18): error TS2300: Duplicate identifier 'src'.
+src/react-app-env.d.ts(32,18): error TS2300: Duplicate identifier 'src'.
+src/react-app-env.d.ts(37,18): error TS2300: Duplicate identifier 'src'.
+src/react-app-env.d.ts(42,18): error TS2300: Duplicate identifier 'src'.
+src/react-app-env.d.ts(47,20): error TS2300: Duplicate identifier 'src'.
+src/react-app-env.d.ts(58,18): error TS2300: Duplicate identifier 'src'.
+src/react-app-env.d.ts(63,18): error TS2300: Duplicate identifier 'classes'.
+src/react-app-env.d.ts(68,18): error TS2300: Duplicate identifier 'classes'.
+src/react-app-env.d.ts(73,18): error TS2300: Duplicate identifier 'classes'.
