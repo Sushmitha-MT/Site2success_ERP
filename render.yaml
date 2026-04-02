@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: erp-backend
+    env: python
+    buildCommand: "pip install -r TEST/backend/requirements.txt"
+    startCommand: "cd TEST/backend && python migrate_db.py && uvicorn app.main:app --host 0.0.0.0 --port $PORT --proxy-headers --forwarded-allow-ips='*'"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: erp-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALGORITHM
+        value: HS256
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: "60"
+      - key: ALLOWED_ORIGINS
+        value: "*" # Update this with your Vercel URL later for security
+      - key: PYTHONPATH
+        value: "."
+
+databases:
+  - name: erp-db
+    databaseName: erp_db
+    user: postgres
+    plan: free

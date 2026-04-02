@@ -18,12 +18,25 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 def migrate():
     db = SessionLocal()
     try:
-        print("Importing models before create_all...")
-        import app.models # this triggers __init__.py which imports all models
+        print("Importing all models explicitly to register with Metadata...")
+        from app.models.users import User
+        from app.models.projects import Project
+        from app.models.tasks import Task
+        from app.models.notifications import Notification
+        from app.models.finance_entries import FinanceEntry
+        from app.models.chat_messages import ChatMessage
+        from app.models.project_messages import ProjectMessage
+        from app.models.clients import Client
+        from app.models.attendance_logs import AttendanceLog
+        from app.models.sprints import Sprint
+        from app.models.task_comments import TaskComment
+        from app.models.user_documents import UserDocument
         
+        print(f"Tables in Metadata: {list(Base.metadata.tables.keys())}")
         
         print("Ensuring tables exist...")
         Base.metadata.create_all(bind=engine)
+        print("create_all execution completed.")
 
         inspector = inspect(engine)
         
