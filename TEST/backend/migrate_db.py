@@ -18,7 +18,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 def migrate():
     db = SessionLocal()
     try:
-        print("Importing all models explicitly to register with Metadata...")
+        print("Importing all models explicitly to register with Metadata...", flush=True)
         from app.models.users import User
         from app.models.projects import Project
         from app.models.tasks import Task
@@ -32,11 +32,11 @@ def migrate():
         from app.models.task_comments import TaskComment
         from app.models.user_documents import UserDocument
         
-        print(f"Tables in Metadata: {list(Base.metadata.tables.keys())}")
+        print(f"Tables in Metadata: {list(Base.metadata.tables.keys())}", flush=True)
         
-        print("Ensuring tables exist...")
+        print("Ensuring tables exist...", flush=True)
         Base.metadata.create_all(bind=engine)
-        print("create_all execution completed.")
+        print("create_all execution completed.", flush=True)
 
         inspector = inspect(engine)
         
@@ -44,10 +44,10 @@ def migrate():
         if 'users' in inspector.get_table_names():
             columns = [c['name'] for c in inspector.get_columns('users')]
             if 'github_username' not in columns:
-                print("Adding 'github_username' column to 'users' table...")
+                print("Adding 'github_username' column to 'users' table...", flush=True)
                 db.execute(text("ALTER TABLE users ADD COLUMN github_username VARCHAR UNIQUE"))
             if 'workspace_enabled' not in columns:
-                print("Adding 'workspace_enabled' column to 'users' table...")
+                print("Adding 'workspace_enabled' column to 'users' table...", flush=True)
                 db.execute(text("ALTER TABLE users ADD COLUMN workspace_enabled BOOLEAN DEFAULT TRUE"))
             
             # Ensure correct types for PostgreSQL
@@ -60,7 +60,7 @@ def migrate():
         if 'notifications' in inspector.get_table_names():
             columns = [c['name'] for c in inspector.get_columns('notifications')]
             if 'is_read' not in columns:
-                print("Adding 'is_read' column to 'notifications' table...")
+                print("Adding 'is_read' column to 'notifications' table...", flush=True)
                 db.execute(text("ALTER TABLE notifications ADD COLUMN is_read BOOLEAN DEFAULT FALSE"))
             
             db.execute(text("ALTER TABLE notifications ALTER COLUMN created_at TYPE TIMESTAMP WITH TIME ZONE"))
@@ -70,10 +70,10 @@ def migrate():
         if 'finance_entries' in inspector.get_table_names():
             columns = [c['name'] for c in inspector.get_columns('finance_entries')]
             if 'is_client_advance' not in columns:
-                print("Adding 'is_client_advance' column to 'finance_entries' table...")
+                print("Adding 'is_client_advance' column to 'finance_entries' table...", flush=True)
                 db.execute(text("ALTER TABLE finance_entries ADD COLUMN is_client_advance BOOLEAN DEFAULT FALSE"))
             if 'advance_amount' not in columns:
-                print("Adding 'advance_amount' column to 'finance_entries' table...")
+                print("Adding 'advance_amount' column to 'finance_entries' table...", flush=True)
                 db.execute(text("ALTER TABLE finance_entries ADD COLUMN advance_amount FLOAT"))
             if 'currency' not in columns:
                 db.execute(text("ALTER TABLE finance_entries ADD COLUMN currency VARCHAR DEFAULT 'INR'"))
@@ -81,7 +81,7 @@ def migrate():
                 db.execute(text("ALTER TABLE finance_entries ADD COLUMN category VARCHAR DEFAULT 'general'"))
             
             if 'type' not in columns:
-                print("Adding 'type' column to 'finance_entries' table...")
+                print("Adding 'type' column to 'finance_entries' table...", flush=True)
                 db.execute(text("ALTER TABLE finance_entries ADD COLUMN type VARCHAR"))
             
             db.execute(text("ALTER TABLE finance_entries ALTER COLUMN created_at TYPE TIMESTAMP WITH TIME ZONE"))
@@ -91,10 +91,10 @@ def migrate():
         if 'projects' in inspector.get_table_names():
             columns = [c['name'] for c in inspector.get_columns('projects')]
             if 'status' not in columns:
-                print("Adding 'status' column to 'projects' table...")
+                print("Adding 'status' column to 'projects' table...", flush=True)
                 db.execute(text("ALTER TABLE projects ADD COLUMN status VARCHAR"))
             if 'project_type' not in columns:
-                print("Adding 'project_type' column to 'projects' table...")
+                print("Adding 'project_type' column to 'projects' table...", flush=True)
                 db.execute(text("ALTER TABLE projects ADD COLUMN project_type VARCHAR DEFAULT 'project'"))
             
             db.execute(text("ALTER TABLE projects ALTER COLUMN created_at TYPE TIMESTAMP WITH TIME ZONE"))
@@ -119,10 +119,10 @@ def migrate():
             db.commit()
 
         # 3. Create a default Super Admin if no users exist
-        print("Checking for existing users...")
+        print("Checking for existing users...", flush=True)
         user_count = db.execute(text("SELECT COUNT(*) FROM users")).scalar()
         # 3. Create or Update Core Admin Users
-        print("Ensuring core admin users exist with correct passwords...")
+        print("Ensuring core admin users exist with correct passwords...", flush=True)
         core_users = [
             {"email": "rahul@erp.com", "password": "rahul123", "name": "Rahul", "role": "super_admin"},
             {"email": "dhanush@erp.com", "password": "dhanush123", "name": "Dhanush", "role": "super_admin"},
@@ -136,7 +136,7 @@ def migrate():
             existing = db.execute(text("SELECT id FROM users WHERE email = :email"), {"email": u["email"]}).fetchone()
             
             if existing:
-                print(f"Updating password for existing user: {u['email']}")
+                print(f"Updating password for existing user: {u['email']}", flush=True)
                 db.execute(text(
                     "UPDATE users SET password_hash = :hpwd, full_name = :name, role = :role, updated_at = NOW() "
                     "WHERE email = :email"
@@ -147,7 +147,7 @@ def migrate():
                     "email": u["email"]
                 })
             else:
-                print(f"Creating new core user: {u['email']}")
+                print(f"Creating new core user: {u['email']}", flush=True)
                 db.execute(text(
                     "INSERT INTO users (id, email, password_hash, full_name, role, is_active, created_at, updated_at) "
                     "VALUES (:id, :email, :hpwd, :name, :role, True, NOW(), NOW())"
@@ -160,10 +160,10 @@ def migrate():
                 })
             db.commit()
 
-        print("Migration and Seeding complete.")
+        print("Migration and Seeding complete.", flush=True)
 
     except Exception as e:
-        print(f"Error during migration: {e}")
+        print(f"Error during migration: {e}", flush=True)
         db.rollback()
     finally:
         db.close()

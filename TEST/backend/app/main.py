@@ -18,6 +18,7 @@ from apscheduler.triggers.cron import CronTrigger
 
 from app.tasks.chat_cleanup import archive_old_community_messages
 from app.tasks.project_chat_cleanup import archive_old_project_messages
+from migrate_db import migrate # Import our database fixer
 
 load_dotenv()
 
@@ -50,7 +51,14 @@ scheduler.add_job(
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Start/stop APScheduler alongside the FastAPI server."""
+    """Start/stop APScheduler alongside the FastAPI server and run migrations."""
+    print("SERVER STARTING: Running database migrations...", flush=True)
+    try:
+        migrate()
+        print("SERVER STARTING: Database migrations complete.", flush=True)
+    except Exception as e:
+        print(f"FATAL: Database migration failed: {e}", flush=True)
+
     scheduler.start()
     logger.info(
         "APScheduler started. Community chat cleanup scheduled daily at 02:00 UTC."
