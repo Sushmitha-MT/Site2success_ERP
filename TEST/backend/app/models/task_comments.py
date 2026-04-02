@@ -23,4 +23,4 @@ class TaskComment(Base):
 
     text = Column(String)
 
-    created_at = Column(DateTime)
+    created_at = Column(DateTime(timezone=True))

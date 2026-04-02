@@ -109,12 +109,18 @@ app.include_router(github_router)
 @app.exception_handler(Exception)
 async def global_exception_handler(request, exc):
     import logging
+    import traceback
     logging.error(f"Global error: {exc}", exc_info=True)
     from fastapi.responses import JSONResponse
     
+    tb = traceback.format_exc()
     response = JSONResponse(
         status_code=500,
-        content={"detail": "Internal Server Error", "error": str(exc)},
+        content={
+            "detail": "Internal Server Error", 
+            "error": str(exc),
+            "traceback": tb
+        },
     )
     # Manually add CORS headers for safety on 500s
     response.headers["Access-Control-Allow-Origin"] = "https://site2success-erp-fpsl.vercel.app"

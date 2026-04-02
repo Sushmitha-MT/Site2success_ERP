@@ -20,6 +20,6 @@ class ArchivedChatMessage(Base):
     file_url = Column(String, nullable=True)
     file_type = Column(String, nullable=True)   # "image" | "video" | "document"
     file_name = Column(String, nullable=True)
-    created_at = Column(DateTime, nullable=False)
-    updated_at = Column(DateTime, nullable=True)
-    archived_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    created_at = Column(DateTime(timezone=True), nullable=False)
+    updated_at = Column(DateTime(timezone=True), nullable=True)
+    archived_at = Column(DateTime(timezone=True), default=datetime.utcnow, nullable=False)

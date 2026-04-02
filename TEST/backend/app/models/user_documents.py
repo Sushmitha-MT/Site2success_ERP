@@ -21,4 +21,4 @@ class UserDocument(Base):
 
     url = Column(String, nullable=False)
 
-    uploaded_at = Column(DateTime)
+    uploaded_at = Column(DateTime(timezone=True))

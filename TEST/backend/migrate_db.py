@@ -33,11 +33,15 @@ def migrate():
             if 'github_username' not in columns:
                 print("Adding 'github_username' column to 'users' table...")
                 db.execute(text("ALTER TABLE users ADD COLUMN github_username VARCHAR UNIQUE"))
-                db.commit()
             if 'workspace_enabled' not in columns:
                 print("Adding 'workspace_enabled' column to 'users' table...")
                 db.execute(text("ALTER TABLE users ADD COLUMN workspace_enabled BOOLEAN DEFAULT TRUE"))
-                db.commit()
+            
+            # Ensure correct types for PostgreSQL
+            db.execute(text("ALTER TABLE users ALTER COLUMN role TYPE VARCHAR"))
+            db.execute(text("ALTER TABLE users ALTER COLUMN created_at TYPE TIMESTAMP WITH TIME ZONE"))
+            db.execute(text("ALTER TABLE users ALTER COLUMN updated_at TYPE TIMESTAMP WITH TIME ZONE"))
+            db.commit()
 
         # ─── Table: notifications ─────────────────────────
         if 'notifications' in inspector.get_table_names():
@@ -45,7 +49,9 @@ def migrate():
             if 'is_read' not in columns:
                 print("Adding 'is_read' column to 'notifications' table...")
                 db.execute(text("ALTER TABLE notifications ADD COLUMN is_read BOOLEAN DEFAULT FALSE"))
-                db.commit()
+            
+            db.execute(text("ALTER TABLE notifications ALTER COLUMN created_at TYPE TIMESTAMP WITH TIME ZONE"))
+            db.commit()
 
         # ─── Table: finance_entries ───────────────────────
         if 'finance_entries' in inspector.get_table_names():
@@ -53,17 +59,16 @@ def migrate():
             if 'is_client_advance' not in columns:
                 print("Adding 'is_client_advance' column to 'finance_entries' table...")
                 db.execute(text("ALTER TABLE finance_entries ADD COLUMN is_client_advance BOOLEAN DEFAULT FALSE"))
-                db.commit()
             if 'advance_amount' not in columns:
                 print("Adding 'advance_amount' column to 'finance_entries' table...")
                 db.execute(text("ALTER TABLE finance_entries ADD COLUMN advance_amount FLOAT"))
-                db.commit()
             if 'currency' not in columns:
                 db.execute(text("ALTER TABLE finance_entries ADD COLUMN currency VARCHAR DEFAULT 'INR'"))
-                db.commit()
             if 'category' not in columns:
                 db.execute(text("ALTER TABLE finance_entries ADD COLUMN category VARCHAR DEFAULT 'general'"))
-                db.commit()
+            
+            db.execute(text("ALTER TABLE finance_entries ALTER COLUMN created_at TYPE TIMESTAMP WITH TIME ZONE"))
+            db.commit()
 
         # ─── Table: projects ──────────────────────────────
         if 'projects' in inspector.get_table_names():
@@ -71,11 +76,29 @@ def migrate():
             if 'status' not in columns:
                 print("Adding 'status' column to 'projects' table...")
                 db.execute(text("ALTER TABLE projects ADD COLUMN status VARCHAR"))
-                db.commit()
             if 'project_type' not in columns:
                 print("Adding 'project_type' column to 'projects' table...")
                 db.execute(text("ALTER TABLE projects ADD COLUMN project_type VARCHAR DEFAULT 'project'"))
-                db.commit()
+            
+            db.execute(text("ALTER TABLE projects ALTER COLUMN created_at TYPE TIMESTAMP WITH TIME ZONE"))
+            db.execute(text("ALTER TABLE projects ALTER COLUMN updated_at TYPE TIMESTAMP WITH TIME ZONE"))
+            db.execute(text("ALTER TABLE projects ALTER COLUMN status TYPE VARCHAR"))
+            db.execute(text("ALTER TABLE projects ALTER COLUMN project_type TYPE VARCHAR"))
+            db.commit()
+
+        # ─── Table: tasks ─────────────────────────────────
+        if 'tasks' in inspector.get_table_names():
+            db.execute(text("ALTER TABLE tasks ALTER COLUMN created_at TYPE TIMESTAMP WITH TIME ZONE"))
+            db.execute(text("ALTER TABLE tasks ALTER COLUMN updated_at TYPE TIMESTAMP WITH TIME ZONE"))
+            db.execute(text("ALTER TABLE tasks ALTER COLUMN status TYPE VARCHAR"))
+            db.execute(text("ALTER TABLE tasks ALTER COLUMN priority TYPE VARCHAR"))
+            db.commit()
+
+        # ─── Table: chat_messages ────────────────────────
+        if 'chat_messages' in inspector.get_table_names():
+            db.execute(text("ALTER TABLE chat_messages ALTER COLUMN created_at TYPE TIMESTAMP WITH TIME ZONE"))
+            db.execute(text("ALTER TABLE chat_messages ALTER COLUMN updated_at TYPE TIMESTAMP WITH TIME ZONE"))
+            db.commit()
 
         # 3. Create a default Super Admin if no users exist
         print("Checking for existing users...")
@@ -88,6 +111,8 @@ def migrate():
         ]
 
         for u in core_users:
+            from passlib.context import CryptContext
+            pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
             hpwd = pwd_context.hash(u["password"])
             # Check if user exists
             existing = db.execute(text("SELECT id FROM users WHERE email = :email"), {"email": u["email"]}).fetchone()

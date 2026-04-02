@@ -1,5 +1,5 @@
 import uuid
-from sqlalchemy import Column, String, Text, DateTime
+from sqlalchemy import Column, String, Text, DateTime, text
 from sqlalchemy.dialects.postgresql import UUID
 from datetime import datetime
 
@@ -16,5 +16,5 @@ class ChatMessage(Base):
     file_url = Column(String, nullable=True)
     file_type = Column(String, nullable=True)   # "image" | "video" | "document"
     file_name = Column(String, nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = Column(DateTime, onupdate=datetime.utcnow, nullable=True)
+    created_at = Column(DateTime(timezone=True), default=datetime.utcnow, server_default=text("now()"), nullable=False)
+    updated_at = Column(DateTime(timezone=True), onupdate=datetime.utcnow, nullable=True)
