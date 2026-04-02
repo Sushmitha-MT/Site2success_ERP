@@ -80,6 +80,10 @@ def migrate():
             if 'category' not in columns:
                 db.execute(text("ALTER TABLE finance_entries ADD COLUMN category VARCHAR DEFAULT 'general'"))
             
+            if 'type' not in columns:
+                print("Adding 'type' column to 'finance_entries' table...")
+                db.execute(text("ALTER TABLE finance_entries ADD COLUMN type VARCHAR"))
+            
             db.execute(text("ALTER TABLE finance_entries ALTER COLUMN created_at TYPE TIMESTAMP WITH TIME ZONE"))
             db.commit()
 
@@ -96,7 +100,8 @@ def migrate():
             db.execute(text("ALTER TABLE projects ALTER COLUMN created_at TYPE TIMESTAMP WITH TIME ZONE"))
             db.execute(text("ALTER TABLE projects ALTER COLUMN updated_at TYPE TIMESTAMP WITH TIME ZONE"))
             db.execute(text("ALTER TABLE projects ALTER COLUMN status TYPE VARCHAR"))
-            db.execute(text("ALTER TABLE projects ALTER COLUMN project_type TYPE VARCHAR"))
+            if 'project_type' in columns:
+                db.execute(text("ALTER TABLE projects ALTER COLUMN project_type TYPE VARCHAR"))
             db.commit()
 
         # ─── Table: tasks ─────────────────────────────────
