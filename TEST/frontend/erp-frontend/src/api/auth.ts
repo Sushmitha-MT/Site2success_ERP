@@ -48,10 +48,10 @@ export async function getMe(): Promise<User> {
 /**
  * POST /auth/login — stores erp_token + erp_role, returns full user object.
  */
-export async function login(email: string, password: string): Promise<User> {
+export async function login(identifier: string, password: string): Promise<User> {
   const res = await api.post<{ access_token: string; token_type: string }>(
     '/auth/login',
-    { email, password }
+    { identifier, password }
   );
   const { access_token } = res.data;
 
