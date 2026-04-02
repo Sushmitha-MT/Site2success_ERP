@@ -24,3 +24,5 @@ class TaskComment(Base):
     text = Column(String)
 
     created_at = Column(DateTime(timezone=True))
+    github_event_type = Column(String, nullable=True)
+    github_actor_username = Column(String, nullable=True)

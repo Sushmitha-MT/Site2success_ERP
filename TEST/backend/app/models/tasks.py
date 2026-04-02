@@ -45,4 +45,7 @@ class Task(Base, TimestampMixin):
 
     assignee_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
 
-    due_date = Column(Date, nullable=True)
+    due_date = Column(Date, nullable=True)
+    github_event_type = Column(String, nullable=True)
+    github_actor_username = Column(String, nullable=True)
+

@@ -1,24 +1,24 @@
 from pydantic import BaseModel
 from typing import Optional
- 
- 
+
+
 class GitHubSender(BaseModel):
     login: str
 
 class GitHubCommit(BaseModel):
     message: str
- 
- 
+
+
 class GitHubRepository(BaseModel):
     name: str
- 
- 
+
+
 class GitHubPullRequest(BaseModel):
     title: str
     body: Optional[str] = None
     number: int
- 
- 
+
+
 class GitHubPayload(BaseModel):
     """
     Validates incoming GitHub webhook payload.
@@ -32,9 +32,19 @@ class GitHubPayload(BaseModel):
     commits: Optional[list[GitHubCommit]] = None
     pull_request: Optional[GitHubPullRequest] = None
     sender: Optional[GitHubSender] = None
- 
- 
+
+
 class GitHubWebhookResponse(BaseModel):
     message: str
     event_type: str                        # "task_created" or "comment_added"
     record_id: str
+
+
+class GitHubActivityItem(BaseModel):
+    event_type: str                        # "push" or "pull_request"
+    repo: str
+    title: str
+    timestamp: str                         # ISO string
+    actor: str
+    actor_matched: bool
+    pr_number: Optional[int] = None

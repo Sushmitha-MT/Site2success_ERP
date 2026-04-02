@@ -111,6 +111,9 @@ def handle_pull_request_opened(payload: GitHubPayload, db: Session) -> dict:
             detail=f"No project found matching repository: {payload.repository.name}",
         )
  
+    # Link pusher
+    pusher_user = _get_pusher_user(payload, db)
+    
     # Create Task
     task = Task(
         id=uuid.uuid4(),
@@ -120,13 +123,15 @@ def handle_pull_request_opened(payload: GitHubPayload, db: Session) -> dict:
         status="todo",
         priority="medium",
         order_index=0,
+        assignee_id=pusher_user.id if pusher_user else None,
+        github_event_type="pull_request",
+        github_actor_username=payload.sender.login if payload.sender else "Unknown",
     )
     db.add(task)
     db.commit()
     db.refresh(task)
 
     # Notification Logic
-    pusher_user = _get_pusher_user(payload, db)
     if pusher_user:
         title = f"New Pull Request in {project.name}"
         message = f"User {pusher_user.full_name} ({pusher_user.github_username}) opened a pull request in Project {project.name}: '{pr.title}'"
@@ -177,17 +182,22 @@ def handle_push_event(payload: GitHubPayload, db: Session) -> dict:
             detail="No tasks found in project to comment on",
         )
  
+    # pusher
+    pusher_user = _get_pusher_user(payload, db)
+
     comment = TaskComment(
         id=uuid.uuid4(),
         task_id=task.id,
         text=f"[GitHub Push] {commit_message}",
+        user_id=pusher_user.id if pusher_user else None,
+        github_event_type="push",
+        github_actor_username=payload.sender.login if payload.sender else "Unknown",
     )
     db.add(comment)
     db.commit()
     db.refresh(comment)
     
     # Notification Logic
-    pusher_user = _get_pusher_user(payload, db)
     if pusher_user:
         title = f"Code Push to {project.name}"
         message = f"User {pusher_user.full_name} ({pusher_user.github_username}) pushed code to Project {project.name}"

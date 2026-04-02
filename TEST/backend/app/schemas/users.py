@@ -26,6 +26,7 @@ class UserResponse(BaseModel):
     workspace_enabled: Optional[bool] = True
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
+    github_username: Optional[str] = None
 
 
 class ProfileUpdateRequest(BaseModel):
@@ -44,6 +45,7 @@ class ProfileUpdateRequest(BaseModel):
     designation: Optional[str] = None
     phone: Optional[str] = None
     address: Optional[str] = None
+    github_username: Optional[str] = None
 
 
 class PreferencesUpdateRequest(BaseModel):

@@ -16,7 +16,10 @@ import {
   TrendingUp,
   TrendingDown,
   User as UserIcon,
+  GitBranch,
+  GitPullRequest,
 } from 'lucide-react';
+import { webhooksApi, GitHubActivityItem } from '../api/webhooks';
 import {
   BarChart,
   Bar,
@@ -54,6 +57,29 @@ const StatCard: React.FC<{
   </div>
 );
 
+const ActivityFeedIcon = ({ type }: { type: 'push' | 'pull_request' }) => {
+  if (type === 'pull_request') return <GitPullRequest className="text-orange-500" size={16} />;
+  return <GitBranch className="text-orange-600" size={16} />;
+};
+
+const formatTimeAgo = (dateStr: string) => {
+  if (!dateStr) return '';
+  const date = new Date(dateStr);
+  const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
+  
+  let interval = Math.floor(seconds / 31536000);
+  if (interval >= 1) return interval + 'y ago';
+  interval = Math.floor(seconds / 2592000);
+  if (interval >= 1) return interval + 'mo ago';
+  interval = Math.floor(seconds / 86400);
+  if (interval >= 1) return interval + 'd ago';
+  interval = Math.floor(seconds / 3600);
+  if (interval >= 1) return interval + 'h ago';
+  interval = Math.floor(seconds / 60);
+  if (interval >= 1) return interval + 'm ago';
+  return 'just now';
+};
+
 const SkeletonCard = () => (
   <div className="bg-white p-6 rounded-3xl border border-neutral-100 animate-pulse">
     <div className="w-12 h-12 bg-neutral-100 rounded-2xl mb-4" />
@@ -81,6 +107,15 @@ const Dashboard: React.FC = () => {
     queryKey: ['finance-entries'],
     queryFn: () => financeApi.getFinanceEntries(),
     enabled: financeAccess,
+  });
+
+  const isManagerialRole = ['super_admin', 'manager'].includes(user?.role || '');
+
+  const { data: githubActivity, isLoading: githubLoading } = useQuery({
+    queryKey: ['github-activity'],
+    queryFn: () => webhooksApi.getGitHubActivity(),
+    enabled: isManagerialRole,
+    refetchInterval: 60000, // Poll once per minute
   });
 
   const isLoading = projectsLoading || tasksLoading || (financeAccess && financeLoading);
@@ -286,6 +321,54 @@ const Dashboard: React.FC = () => {
             </Link>
           )}
         </div>
+
+        {/* GitHub Activity Feed (Restricted) */}
+        {isManagerialRole && (
+          <div className="bg-white p-8 rounded-3xl border border-neutral-100 shadow-sm flex flex-col hover:border-orange-100 transition-colors">
+            <h3 className="text-2xl font-black text-neutral-900 mb-6 tracking-tight">GitHub Activity</h3>
+            <div className="space-y-4 flex-1">
+              {githubLoading ? (
+                [1, 2, 3].map((i) => <div key={i} className="h-16 bg-neutral-50 rounded-2xl animate-pulse" />)
+              ) : githubActivity && githubActivity.length > 0 ? (
+                githubActivity.map((event: GitHubActivityItem, idx: number) => (
+                  <div key={idx} className="flex gap-4 p-4 rounded-2xl border border-neutral-50 bg-neutral-50/20">
+                    <div className="mt-1">
+                      <ActivityFeedIcon type={event.event_type} />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex justify-between items-start gap-2">
+                        <p className="text-xs font-black text-neutral-900 leading-tight uppercase tracking-tight truncate">
+                          {event.repo}
+                        </p>
+                        <span className="text-[10px] font-bold text-neutral-400 whitespace-nowrap">
+                          {formatTimeAgo(event.timestamp)}
+                        </span>
+                      </div>
+                      <p className="text-xs text-neutral-600 mt-1 line-clamp-1">
+                        {event.title}
+                      </p>
+                      <div className="flex items-center gap-2 mt-2">
+                        <UserIcon size={12} className="text-neutral-300" />
+                        <span className={`text-[10px] font-bold ${event.actor_matched ? 'text-neutral-900' : 'text-neutral-400'}`}>
+                          {event.actor}
+                        </span>
+                        {event.pr_number && (
+                          <span className="text-[10px] font-black text-orange-600 bg-orange-50 px-1 rounded">
+                            #{event.pr_number}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="py-10 text-center">
+                  <p className="text-neutral-400 font-bold uppercase tracking-widest text-[10px]">No GitHub activity yet</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

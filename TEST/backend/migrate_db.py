@@ -106,10 +106,30 @@ def migrate():
 
         # ─── Table: tasks ─────────────────────────────────
         if 'tasks' in inspector.get_table_names():
+            columns = [c['name'] for c in inspector.get_columns('tasks')]
+            if 'github_event_type' not in columns:
+                print("Adding 'github_event_type' column to 'tasks' table...", flush=True)
+                db.execute(text("ALTER TABLE tasks ADD COLUMN github_event_type VARCHAR"))
+            if 'github_actor_username' not in columns:
+                print("Adding 'github_actor_username' column to 'tasks' table...", flush=True)
+                db.execute(text("ALTER TABLE tasks ADD COLUMN github_actor_username VARCHAR"))
+            
             db.execute(text("ALTER TABLE tasks ALTER COLUMN created_at TYPE TIMESTAMP WITH TIME ZONE"))
             db.execute(text("ALTER TABLE tasks ALTER COLUMN updated_at TYPE TIMESTAMP WITH TIME ZONE"))
             db.execute(text("ALTER TABLE tasks ALTER COLUMN status TYPE VARCHAR"))
             db.execute(text("ALTER TABLE tasks ALTER COLUMN priority TYPE VARCHAR"))
+            db.commit()
+
+        # ─── Table: task_comments ───────────────────────
+        if 'task_comments' in inspector.get_table_names():
+            columns = [c['name'] for c in inspector.get_columns('task_comments')]
+            if 'github_event_type' not in columns:
+                print("Adding 'github_event_type' column to 'task_comments' table...", flush=True)
+                db.execute(text("ALTER TABLE task_comments ADD COLUMN github_event_type VARCHAR"))
+            if 'github_actor_username' not in columns:
+                print("Adding 'github_actor_username' column to 'task_comments' table...", flush=True)
+                db.execute(text("ALTER TABLE task_comments ADD COLUMN github_actor_username VARCHAR"))
+            
             db.commit()
 
         # ─── Table: chat_messages ────────────────────────

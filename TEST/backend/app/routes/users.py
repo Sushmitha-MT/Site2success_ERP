@@ -51,6 +51,7 @@ def get_my_profile(current_user: User = Depends(get_current_user_db)):
         workspace_enabled=current_user.workspace_enabled,
         created_at=current_user.created_at,
         updated_at=current_user.updated_at,
+        github_username=current_user.github_username,
     )
 
 
@@ -93,6 +94,8 @@ def update_profile(
         current_user.phone = payload.phone
     if payload.address is not None:
         current_user.address = payload.address
+    if payload.github_username is not None:
+        current_user.github_username = payload.github_username
 
     db.commit()
     db.refresh(current_user)
@@ -112,6 +115,7 @@ def update_profile(
         workspace_enabled=current_user.workspace_enabled,
         created_at=current_user.created_at,
         updated_at=current_user.updated_at,
+        github_username=current_user.github_username,
     )
 
 
@@ -149,6 +153,7 @@ def update_preferences(
         workspace_enabled=current_user.workspace_enabled,
         created_at=current_user.created_at,
         updated_at=current_user.updated_at,
+        github_username=current_user.github_username,
     )
 
 
