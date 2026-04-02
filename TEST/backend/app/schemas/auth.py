@@ -23,7 +23,7 @@ class RegisterRequest(BaseModel):
     email: EmailStr
     password: str = Field(..., min_length=6, description="Minimum 6 characters")
     full_name: str = Field(..., min_length=1)
-    role: str = Field(default="employee", description="employee | project_manager | super_admin")
+    role: str = Field(default="employee", description="super_admin | admin | manager | project_manager | employee | founder | co_founder")
 
 
 class LoginRequest(BaseModel):

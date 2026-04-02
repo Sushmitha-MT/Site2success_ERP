@@ -75,10 +75,17 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# Allow the React frontend to call this API (Temporary * for easiest deployment)
+# Allowed origins for CORS
+ALLOWED_ORIGINS = [
+    "https://site2success-erp-fpsl.vercel.app",
+    "http://localhost:5173",
+    "http://localhost:3000",
+]
+
+# Allow the React frontend to call this API
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
