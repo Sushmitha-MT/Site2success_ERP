@@ -12,3 +12,6 @@ from .attendance_logs import AttendanceLog
 from .clients import Client
 from .chat_messages import ChatMessage
 from .archived_chat_messages import ArchivedChatMessage
+from .notifications import Notification
+from .project_messages import ProjectMessage
+from .archived_project_messages import ArchivedProjectMessage

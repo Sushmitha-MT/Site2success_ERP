@@ -36,3 +36,5 @@ class User(Base, TimestampMixin):
     theme = Column(String)
 
     workspace_enabled = Column(Boolean, default=True)
+
+    github_username = Column(String, unique=True, index=True, nullable=True)

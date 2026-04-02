@@ -17,6 +17,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
 
 from app.tasks.chat_cleanup import archive_old_community_messages
+from app.tasks.project_chat_cleanup import archive_old_project_messages
 
 load_dotenv()
 
@@ -35,6 +36,17 @@ scheduler.add_job(
     misfire_grace_time=3600,  # tolerate up to 1-hour delay before skipping
 )
 
+# Run daily at 03:00 UTC — rolling 24-hour project chat archive
+scheduler.add_job(
+    archive_old_project_messages,
+    trigger=CronTrigger(hour=3, minute=0),
+    id="project_chat_cleanup",
+    name="Project Chat 24-Hour Rolling Archive",
+    replace_existing=True,
+    misfire_grace_time=3600,
+)
+
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -50,7 +62,7 @@ async def lifespan(app: FastAPI):
 # Import all route files (Week 1 RBAC + Week 2 Auth & User Management)
 from app.routes import projects, sprints, tasks, workspace, finance
 from app.routes import auth, users, clients, attendance
-from app.routes import chat, project_chat
+from app.routes import chat, project_chat, notifications
 from webhooks.jibble.router import router as jibble_router
 from webhooks.github.router import router as github_router
 
@@ -84,6 +96,7 @@ app.include_router(clients.router,  prefix=API_PREFIX)
 app.include_router(attendance.router, prefix=API_PREFIX)
 app.include_router(chat.router, prefix=API_PREFIX)
 app.include_router(project_chat.router, prefix=API_PREFIX)
+app.include_router(notifications.router, prefix=API_PREFIX)
 app.include_router(jibble_router)
 app.include_router(github_router)
 

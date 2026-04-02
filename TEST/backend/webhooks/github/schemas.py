@@ -1,8 +1,10 @@
-# app/webhooks/github/schemas.py
 from pydantic import BaseModel
 from typing import Optional
  
  
+class GitHubSender(BaseModel):
+    login: str
+
 class GitHubCommit(BaseModel):
     message: str
  
@@ -29,6 +31,7 @@ class GitHubPayload(BaseModel):
     repository: GitHubRepository
     commits: Optional[list[GitHubCommit]] = None
     pull_request: Optional[GitHubPullRequest] = None
+    sender: Optional[GitHubSender] = None
  
  
 class GitHubWebhookResponse(BaseModel):

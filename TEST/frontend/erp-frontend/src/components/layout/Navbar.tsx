@@ -2,6 +2,7 @@ import React from 'react';
 import { User as UserIcon } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { formatRole } from '../../utils/roles';
+import NotificationBell from '../NotificationBell';
 
 const Navbar: React.FC = () => {
   const { user } = useAuth();
@@ -17,6 +18,7 @@ const Navbar: React.FC = () => {
 
       {/* Right section: user profile */}
       <div className="flex items-center gap-6">
+        <NotificationBell />
         <div className="flex items-center gap-4 group cursor-pointer transition-opacity hover:opacity-80">
           <div className="text-right hidden sm:block">
             <p className="text-sm font-black text-neutral-900 leading-none mb-1">
