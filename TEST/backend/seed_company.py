@@ -20,7 +20,7 @@ def seed():
         # Full Roster Data
         # Format: (Name, RegNo, Role, Designation/Responsibility, Course/Dept)
         roster = [
-            ("Rahul R", "2440166", UserRole.founder, "CEO & Co-Founder", "Management"),
+            ("Rahul R", "2440166", UserRole.co_founder, "CEO & Co-Founder", "Management"),
             ("L Dhanush Raj", "2440269", UserRole.co_founder, "COO & Co-Founder", "Operations"),
             ("Kushi Shenoy", "2431983", UserRole.manager, "General Manager (Intern)", "BACP"),
             ("Ram Sunil K R", "2440232", UserRole.manager, "Manager (Cold Calling & Mails)", "BSc CS"),
@@ -70,8 +70,13 @@ def seed():
             else:
                 # Update existing user to match the designation and Dept from the new roster
                 db.execute(text(
-                    "UPDATE users SET designation = :desig, department = :dept WHERE full_name = :name"
-                ), {"name": name, "desig": designation, "dept": dept})
+                    "UPDATE users SET designation = :desig, department = :dept, role = :role WHERE full_name = :name"
+                ), {
+                    "name": name, 
+                    "desig": designation, 
+                    "dept": dept, 
+                    "role": role.value if hasattr(role, 'value') else role
+                })
                 print(f"🔄 Updated: {name}")
 
         db.commit()
