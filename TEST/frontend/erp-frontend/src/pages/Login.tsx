@@ -85,11 +85,11 @@ const Login: React.FC = () => {
 
             <form onSubmit={handleLogin} className="space-y-6">
               <div className="space-y-2">
-                <label className="text-sm font-bold text-neutral-700 ml-1">Full Name or Email</label>
+                <label className="text-sm font-bold text-neutral-700 ml-1">Email Address</label>
                 <div className="relative group">
                   <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 group-focus-within:text-orange-500 transition-colors" size={18} />
                   <input
-                    type="text"
+                    type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full bg-neutral-50 border border-neutral-200 rounded-xl py-4 pl-12 pr-4 outline-none focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 transition-all font-medium"

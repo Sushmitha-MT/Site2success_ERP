@@ -12,7 +12,6 @@ from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from passlib.context import CryptContext
-from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
 from app.db.session import get_db
@@ -110,26 +109,15 @@ def register(payload: RegisterRequest, db: Session = Depends(get_db)):
 def login(payload: LoginRequest, db: Session = Depends(get_db)):
     """
     Authenticate with email + password.
-    - Queries user by identifier (email or full_name)
+    - Queries user by email
     - Verifies bcrypt password
     - Returns JWT on success
     """
-    from sqlalchemy import func
-    # Strip whitespace to prevent copy-paste errors
-    clean_identifier = payload.identifier.strip()
-    clean_password = payload.password.strip()
-
-    user = db.query(User).filter(
-        or_(
-            func.lower(User.email) == func.lower(clean_identifier),
-            func.lower(User.full_name) == func.lower(clean_identifier)
-        )
-    ).first()
-
-    if not user or not _verify_password(clean_password, user.password_hash):
+    user = db.query(User).filter(User.email == payload.email).first()
+    if not user or not _verify_password(payload.password, user.password_hash):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid credentials",
+            detail="Invalid email or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
 

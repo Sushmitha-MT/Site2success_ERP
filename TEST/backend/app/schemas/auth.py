@@ -30,13 +30,13 @@ class LoginRequest(BaseModel):
     model_config = ConfigDict(
         json_schema_extra={
             "example": {
-                "identifier": "alice@example.com",
+                "email": "alice@example.com",
                 "password": "secret123",
             }
         }
     )
 
-    identifier: str
+    email: EmailStr
     password: str
 
 
