@@ -87,9 +87,9 @@ const Dashboard: React.FC = () => {
   const error = projectsError || tasksError;
 
   // Computed stats
-  const totalProjects = projects?.length || 0;
-  const totalTasks = tasks?.length || 0;
-  const myTasks = tasks?.filter((t: any) => t.assignee_id === user?.id).length || 0;
+  const totalProjects = Array.isArray(projects) ? projects.length : 0;
+  const totalTasks = Array.isArray(tasks) ? tasks.length : 0;
+  const myTasks = Array.isArray(tasks) ? tasks.filter((t: any) => t.assignee_id === user?.id).length : 0;
 
   const totalRevenue = financeAccess
     ? financeEntries?.filter((e: any) => e.type === 'income').reduce((s: number, e: any) => s + e.amount, 0) || 0
@@ -99,9 +99,9 @@ const Dashboard: React.FC = () => {
     : 0;
 
   const tasksByStatus = {
-    todo: tasks?.filter((t: any) => t.status === 'todo').length || 0,
-    in_progress: tasks?.filter((t: any) => t.status === 'in_progress').length || 0,
-    done: tasks?.filter((t: any) => t.status === 'done').length || 0,
+    todo: Array.isArray(tasks) ? tasks.filter((t: any) => t.status === 'todo').length : 0,
+    in_progress: Array.isArray(tasks) ? tasks.filter((t: any) => t.status === 'in_progress').length : 0,
+    done: Array.isArray(tasks) ? tasks.filter((t: any) => t.status === 'done').length : 0,
   };
 
   const chartData = [
