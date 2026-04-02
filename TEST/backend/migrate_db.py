@@ -118,6 +118,18 @@ def migrate():
             db.execute(text("ALTER TABLE chat_messages ALTER COLUMN updated_at TYPE TIMESTAMP WITH TIME ZONE"))
             db.commit()
 
+        # ─── Table: attendance_logs ──────────────────────
+        if 'attendance_logs' in inspector.get_table_names():
+            columns = [c['name'] for c in inspector.get_columns('attendance_logs')]
+            if 'errant' not in columns:
+                print("Adding 'errant' column to 'attendance_logs' table...", flush=True)
+                db.execute(text("ALTER TABLE attendance_logs ADD COLUMN errant BOOLEAN DEFAULT FALSE"))
+            
+            db.execute(text("ALTER TABLE attendance_logs ALTER COLUMN clock_in TYPE TIMESTAMP WITH TIME ZONE"))
+            db.execute(text("ALTER TABLE attendance_logs ALTER COLUMN clock_out TYPE TIMESTAMP WITH TIME ZONE"))
+            db.execute(text("ALTER TABLE attendance_logs ALTER COLUMN created_at TYPE TIMESTAMP WITH TIME ZONE"))
+            db.commit()
+
         # 3. Create a default Super Admin if no users exist
         print("Checking for existing users...", flush=True)
         user_count = db.execute(text("SELECT COUNT(*) FROM users")).scalar()
