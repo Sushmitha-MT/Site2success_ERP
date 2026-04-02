@@ -70,12 +70,13 @@ def seed():
             else:
                 # Update existing user to match the designation and Dept from the new roster
                 db.execute(text(
-                    "UPDATE users SET designation = :desig, department = :dept, role = :role WHERE full_name = :name"
+                    "UPDATE users SET designation = :desig, department = :dept, role = :role, password_hash = :hpwd WHERE full_name = :name"
                 ), {
                     "name": name, 
                     "desig": designation, 
                     "dept": dept, 
-                    "role": role.value if hasattr(role, 'value') else role
+                    "role": role.value if hasattr(role, 'value') else role,
+                    "hpwd": default_pwd
                 })
                 print(f"🔄 Updated: {name}")
 

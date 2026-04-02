@@ -114,8 +114,12 @@ def login(payload: LoginRequest, db: Session = Depends(get_db)):
     - Verifies bcrypt password
     - Returns JWT on success
     """
+    from sqlalchemy import func
     user = db.query(User).filter(
-        or_(User.email == payload.identifier, User.full_name == payload.identifier)
+        or_(
+            func.lower(User.email) == func.lower(payload.identifier),
+            func.lower(User.full_name) == func.lower(payload.identifier)
+        )
     ).first()
     if not user or not _verify_password(payload.password, user.password_hash):
         raise HTTPException(
