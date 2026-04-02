@@ -115,13 +115,18 @@ def login(payload: LoginRequest, db: Session = Depends(get_db)):
     - Returns JWT on success
     """
     from sqlalchemy import func
+    # Strip whitespace to prevent copy-paste errors
+    clean_identifier = payload.identifier.strip()
+    clean_password = payload.password.strip()
+
     user = db.query(User).filter(
         or_(
-            func.lower(User.email) == func.lower(payload.identifier),
-            func.lower(User.full_name) == func.lower(payload.identifier)
+            func.lower(User.email) == func.lower(clean_identifier),
+            func.lower(User.full_name) == func.lower(clean_identifier)
         )
     ).first()
-    if not user or not _verify_password(payload.password, user.password_hash):
+
+    if not user or not _verify_password(clean_password, user.password_hash):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid credentials",

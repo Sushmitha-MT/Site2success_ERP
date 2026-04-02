@@ -39,39 +39,8 @@ def migrate():
             db.commit()
             print("Column added successfully.")
 
-        # 3. Create default users for ALL roles if they don't exist
-        print("Checking/Seeding default users for all roles...")
-        roles_to_seed = [
-            ("super_admin", "admin@erp.com", "Super Admin"),
-            ("admin", "admin_user@erp.com", "Admin User"),
-            ("manager", "manager@erp.com", "Manager User"),
-            ("project_manager", "pm@erp.com", "Project Manager"),
-            ("employee", "employee@erp.com", "Standard Employee"),
-            ("founder", "founder@erp.com", "Founder User"),
-            ("co_founder", "co_founder@erp.com", "Co-Founder User")
-        ]
-
-        for role_val, email, name in roles_to_seed:
-            existing = db.execute(text("SELECT id FROM users WHERE email = :email"), {"email": email}).first()
-            if not existing:
-                print(f"Seeding {role_val} user: {email}...")
-                uid = str(uuid.uuid4())
-                hpwd = pwd_context.hash("password123")
-                db.execute(text(
-                    "INSERT INTO users (id, email, password_hash, full_name, role, is_active, created_at, updated_at) "
-                    "VALUES (:id, :email, :hpwd, :name, :role, :active, NOW(), NOW())"
-                ), {
-                    "id": uid,
-                    "email": email,
-                    "hpwd": hpwd,
-                    "name": name,
-                    "role": role_val,
-                    "active": True
-                })
-                db.commit()
-                print(f"Created {role_val} user successfully.")
-            else:
-                print(f"User {email} already exists.")
+        # Seeding has been moved to seed_company.py for a unified roster management.
+        print("Schema migration complete. Seeding will be handled by startup.py -> seed_company.py.")
 
         # Ensure Rahul's password is reset to rahul123 if needed (since user mentioned only Rahul works)
         # We'll leave existing users alone to avoid overwriting their data unless asked.

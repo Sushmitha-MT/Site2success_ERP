@@ -17,9 +17,19 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 def seed():
     db = SessionLocal()
     try:
-        # Full Roster Data
-        # Format: (Name, RegNo, Role, Designation/Responsibility, Course/Dept)
+        # Full Roster & System Accounts Data
+        # Format: (Name, RegNo/EmailID, Role, Designation/Responsibility, Course/Dept)
         roster = [
+            # --- System Default Accounts ---
+            ("Super Admin", "admin@erp.com", UserRole.super_admin, "System Oversight", "Administration"),
+            ("Admin User", "admin_user@erp.com", UserRole.admin, "Platform Management", "IT Support"),
+            ("Manager User", "manager@erp.com", UserRole.manager, "Team Lead", "Management"),
+            ("Project Manager", "pm@erp.com", UserRole.project_manager, "Project Oversight", "Operations"),
+            ("Employee User", "employee@erp.com", UserRole.employee, "Standard User", "General"),
+            ("Founder Account", "founder@erp.com", UserRole.founder, "Strategic Direction", "Board"),
+            ("Co-Founder Account", "co_founder@erp.com", UserRole.co_founder, "Operational Strategy", "Board"),
+
+            # --- Company Roster ---
             ("Rahul R", "2440166", UserRole.co_founder, "CEO & Co-Founder", "Management"),
             ("L Dhanush Raj", "2440269", UserRole.co_founder, "COO & Co-Founder", "Operations"),
             ("Kushi Shenoy", "2431983", UserRole.manager, "General Manager (Intern)", "BACP"),
@@ -47,8 +57,13 @@ def seed():
         print(f"Seeding {len(roster)} company members...")
 
         for name, regno, role, designation, dept in roster:
-            # Check for existing user by name (since identifier login uses name) OR regno email
-            email = f"{name.lower().replace(' ', '.')}.{regno}@site2success.com"
+            # Check if regno is already an email (for system accounts)
+            if "@" in regno:
+                email = regno
+            else:
+                # Generate unique email for roster members
+                email = f"{name.lower().replace(' ', '.')}.{regno}@site2success.com"
+            
             existing = db.execute(text("SELECT id FROM users WHERE full_name = :name OR email = :email"), {"name": name, "email": email}).first()
             
             if not existing:
