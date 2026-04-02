@@ -19,7 +19,7 @@ class User(Base, TimestampMixin):
 
     full_name = Column(String, nullable=False)
 
-    role = Column(Enum(UserRole), nullable=False)
+    role = Column(Enum(UserRole, native_enum=False, create_constraint=False), nullable=False)
 
     is_active = Column(Boolean, default=True)
 

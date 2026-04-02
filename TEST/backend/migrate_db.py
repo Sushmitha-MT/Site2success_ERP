@@ -54,6 +54,16 @@ def migrate():
                 print("Adding 'is_client_advance' column to 'finance_entries' table...")
                 db.execute(text("ALTER TABLE finance_entries ADD COLUMN is_client_advance BOOLEAN DEFAULT FALSE"))
                 db.commit()
+            if 'advance_amount' not in columns:
+                print("Adding 'advance_amount' column to 'finance_entries' table...")
+                db.execute(text("ALTER TABLE finance_entries ADD COLUMN advance_amount FLOAT"))
+                db.commit()
+            if 'currency' not in columns:
+                db.execute(text("ALTER TABLE finance_entries ADD COLUMN currency VARCHAR DEFAULT 'INR'"))
+                db.commit()
+            if 'category' not in columns:
+                db.execute(text("ALTER TABLE finance_entries ADD COLUMN category VARCHAR DEFAULT 'general'"))
+                db.commit()
 
         # ─── Table: projects ──────────────────────────────
         if 'projects' in inspector.get_table_names():
