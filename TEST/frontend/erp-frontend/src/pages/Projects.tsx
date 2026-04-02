@@ -197,7 +197,7 @@ const Projects: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {[1, 2, 3].map((i) => <div key={i} className="h-64 bg-neutral-100 rounded-3xl animate-pulse" />)}
         </div>
-      ) : projects?.length === 0 ? (
+      ) : !Array.isArray(projects) || projects.length === 0 ? (
         <div className="p-24 text-center bg-white rounded-[40px] border border-neutral-100 shadow-sm">
           <div className="w-24 h-24 bg-orange-50 rounded-3xl flex items-center justify-center text-orange-400 mx-auto mb-8 shadow-inner">
             <Layers size={48} />
@@ -215,7 +215,7 @@ const Projects: React.FC = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((p: any) => (
+          {Array.isArray(projects) && projects.map((p: any) => (
             <div
               key={p.id}
               className="bg-white p-8 rounded-[32px] card-lift group cursor-pointer flex flex-col relative overflow-hidden"
@@ -360,7 +360,7 @@ const Projects: React.FC = () => {
                 <label className="block text-sm font-bold text-neutral-700 mb-2 px-1">Project Lead</label>
                 <select value={managerId} onChange={(e) => setManagerId(e.target.value)} className={fieldCls}>
                   <option value="">--Select --</option>
-                  {users
+                  {Array.isArray(users) && users
                     .filter((u: any) => u.full_name !== 'Admin User' && u.full_name !== 'Ram3')
                     .map((u: any) => (
                       <option key={u.id} value={u.id}>{u.full_name || u.email}</option>
@@ -427,7 +427,7 @@ const Projects: React.FC = () => {
                 <label className="block text-sm font-bold text-neutral-700 mb-2 px-1">Project Lead (Manager)</label>
                 <select value={editManagerId} onChange={(e) => setEditManagerId(e.target.value)} className={fieldCls}>
                   <option value="">-- Change Lead --</option>
-                  {users
+                  {Array.isArray(users) && users
                     .filter((u: any) => u.full_name !== 'Admin User' && u.full_name !== 'Ram3')
                     .map((u: any) => (
                       <option key={u.id} value={u.id}>
@@ -484,14 +484,14 @@ const Projects: React.FC = () => {
                 </div>
                 
                 <div className="max-h-72 overflow-y-auto p-4 space-y-2">
-                  {users
+                  {Array.isArray(users) && users
                     .filter((u: any) => {
                       const search = memberSearch.toLowerCase();
                       return u.full_name?.toLowerCase().includes(search) || u.role?.toLowerCase().includes(search);
                     })
                     .map((u: any) => {
                       const isLead = addMemberProject.manager_id === u.id;
-                      const isMember = existingMembers.some((em: any) => em.id === u.id);
+                      const isMember = Array.isArray(existingMembers) && existingMembers.some((em: any) => em.id === u.id);
                       const isExisting = isMember || isLead;
                       const isSelected = selectedUserIds.includes(u.id);
                       

@@ -94,14 +94,14 @@ const NotificationBell: React.FC = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Computed unread count
-  const unreadCount = notifications.filter(n => !n.is_read).length;
+  const unreadCount = Array.isArray(notifications) ? notifications.filter(n => !n.is_read).length : 0;
 
   // Poll notifications
   const loadNotifications = async () => {
     try {
       const data = await notificationsApi.getNotifications();
       // sort is handled by backend (latest first), so just set state
-      setNotifications(data);
+      setNotifications(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Failed to load notifications:', error);
     } finally {
@@ -191,9 +191,9 @@ const NotificationBell: React.FC = () => {
 
           {/* List Area */}
           <div className="max-h-[400px] overflow-y-auto overscroll-contain">
-            {loading && notifications.length === 0 ? (
+            {loading && (!Array.isArray(notifications) || notifications.length === 0) ? (
               <div className="p-8 text-center text-neutral-400 text-sm font-medium">Loading...</div>
-            ) : notifications.length === 0 ? (
+            ) : !Array.isArray(notifications) || notifications.length === 0 ? (
               <div className="p-10 flex flex-col items-center justify-center text-center">
                 <div className="w-12 h-12 bg-neutral-50 rounded-full flex items-center justify-center text-neutral-300 mb-3">
                   <Bell size={20} />
@@ -202,7 +202,7 @@ const NotificationBell: React.FC = () => {
                 <p className="text-xs text-neutral-400 mt-1">You're all caught up!</p>
               </div>
             ) : (
-              notifications.map((notif) => (
+              Array.isArray(notifications) && notifications.map((notif) => (
                 <NotificationItem 
                   key={notif.id} 
                   notification={notif} 

@@ -75,14 +75,10 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# Allow the React frontend to call this API
-origins = os.getenv("ALLOWED_ORIGINS", "").split(",")
-origins = [o.strip() for o in origins if o.strip()]
-origins.extend(["http://localhost:5173", "http://localhost:3000"])
-
+# Allow the React frontend to call this API (Temporary * for easiest deployment)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

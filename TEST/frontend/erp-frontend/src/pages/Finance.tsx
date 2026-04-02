@@ -126,8 +126,8 @@ const Finance: React.FC = () => {
     }
   };
 
-  const totalRevenue = entries.filter((e: any) => e.type === 'income').reduce((s: number, e: any) => s + e.amount, 0);
-  const totalExpenses = entries.filter((e: any) => e.type === 'expense').reduce((s: number, e: any) => s + e.amount, 0);
+  const totalRevenue = Array.isArray(entries) ? entries.filter((e: any) => e.type === 'income').reduce((s: number, e: any) => s + e.amount, 0) : 0;
+  const totalExpenses = Array.isArray(entries) ? entries.filter((e: any) => e.type === 'expense').reduce((s: number, e: any) => s + e.amount, 0) : 0;
   const netProfit = totalRevenue - totalExpenses;
 
   return (
@@ -236,9 +236,9 @@ const Finance: React.FC = () => {
                     <td colSpan={6} className="px-10 py-6 h-20 bg-neutral-50/20" />
                   </tr>
                 ))
-              ) : entries.length > 0 ? (
+              ) : Array.isArray(entries) && entries.length > 0 ? (
                 entries.map((e: any) => {
-                  const project = projects.find((p: any) => p.id === e.project_id);
+                  const project = Array.isArray(projects) ? projects.find((p: any) => p.id === e.project_id) : null;
                   return (
                     <tr key={e.id} className="hover:bg-orange-50/30 transition-all group">
                       <td className="px-10 py-6">
@@ -356,7 +356,7 @@ const Finance: React.FC = () => {
                 <label className="block text-sm font-bold text-neutral-700 mb-2 px-1">Associated Internal Project</label>
                 <select value={projectId} onChange={(e) => setProjectId(e.target.value)} className={fieldCls}>
                   <option value="">--Projects--</option>
-                  {projects.map((p: any) => <option key={p.id} value={p.id}>{p.name}</option>)}
+                  {Array.isArray(projects) && projects.map((p: any) => <option key={p.id} value={p.id}>{p.name}</option>)}
                 </select>
               </div>
               <div className="grid grid-cols-2 gap-6">

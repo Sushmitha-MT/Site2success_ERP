@@ -169,7 +169,7 @@ const Tasks: React.FC = () => {
       {/* Kanban Board */}
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-8 min-h-[600px] items-start">
         {columns.map((col) => {
-          const colTasks = tasks.filter((t: any) => t.status === col.id);
+          const colTasks = Array.isArray(tasks) ? tasks.filter((t: any) => t.status === col.id) : [];
           return (
             <div key={col.id} className={`${col.bg} rounded-[32px] border border-neutral-100 p-8 flex flex-col transition-all`}>
               {/* Column header */}
@@ -298,7 +298,7 @@ const Tasks: React.FC = () => {
                 <label className="block text-sm font-bold text-neutral-700 mb-2 px-1"> Project *</label>
                 <select required value={projectId} onChange={(e) => setProjectId(e.target.value)} className={fieldCls}>
                   <option value="">-- Select Project --</option>
-                  {projects.map((p: any) => <option key={p.id} value={p.id}>{p.name}</option>)}
+                  {Array.isArray(projects) && projects.map((p: any) => <option key={p.id} value={p.id}>{p.name}</option>)}
                 </select>
               </div>
               <div>

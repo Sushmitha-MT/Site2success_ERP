@@ -91,11 +91,11 @@ const Dashboard: React.FC = () => {
   const totalTasks = Array.isArray(tasks) ? tasks.length : 0;
   const myTasks = Array.isArray(tasks) ? tasks.filter((t: any) => t.assignee_id === user?.id).length : 0;
 
-  const totalRevenue = financeAccess
-    ? financeEntries?.filter((e: any) => e.type === 'income').reduce((s: number, e: any) => s + e.amount, 0) || 0
+  const totalRevenue = (financeAccess && Array.isArray(financeEntries))
+    ? financeEntries.filter((e: any) => e.type === 'income').reduce((s: number, e: any) => s + e.amount, 0)
     : 0;
-  const totalExpenses = financeAccess
-    ? financeEntries?.filter((e: any) => e.type === 'expense').reduce((s: number, e: any) => s + e.amount, 0) || 0
+  const totalExpenses = (financeAccess && Array.isArray(financeEntries))
+    ? financeEntries.filter((e: any) => e.type === 'expense').reduce((s: number, e: any) => s + e.amount, 0)
     : 0;
 
   const tasksByStatus = {
@@ -111,7 +111,7 @@ const Dashboard: React.FC = () => {
   ];
   const COLORS = ['#fdba74', '#f97316', '#ea580c'];
 
-  const upcomingDeadlines = projects
+  const upcomingDeadlines = Array.isArray(projects)
     ? [...projects]
         .filter((p: any) => p.end_date && p.status === 'active')
         .sort((a: any, b: any) => new Date(a.end_date).getTime() - new Date(b.end_date).getTime())

@@ -239,7 +239,7 @@ const MyAttendance: React.FC = () => {
                     <td className="px-10 py-6 h-20 bg-neutral-50/20" colSpan={5} />
                   </tr>
                 ))
-              ) : history?.length > 0 ? (
+              ) : Array.isArray(history) && history.length > 0 ? (
                 history.map((log: any) => {
                   const duration = formatDuration(log.clock_in, log.clock_out, log.total_hours);
                   const stillWorking = log.clock_in && !log.clock_out;

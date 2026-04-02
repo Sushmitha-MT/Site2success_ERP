@@ -61,18 +61,18 @@ const KanbanColumn: React.FC<KanbanColProps> = ({
           <h3 className="font-extrabold text-neutral-900 text-sm">{label}</h3>
         </div>
         <span className="bg-white text-neutral-500 text-xs font-black px-2.5 py-1 rounded-lg border border-neutral-100 shadow-sm">
-          {tasks.length}
+          {Array.isArray(tasks) ? tasks.length : 0}
         </span>
       </div>
 
       <div className="flex-1 space-y-3 overflow-y-auto pr-1">
-        {tasks.length === 0 ? (
+        {!Array.isArray(tasks) || tasks.length === 0 ? (
           <div className="h-28 border-2 border-dashed border-neutral-200 rounded-2xl flex items-center justify-center">
             <p className="text-neutral-400 text-xs font-medium">No tasks available</p>
           </div>
         ) : (
           tasks.map((task: any) => {
-            const assignee = users?.find((u: any) => u.id === task.assignee_id);
+            const assignee = Array.isArray(users) ? users.find((u: any) => u.id === task.assignee_id) : null;
             return (
               <div key={task.id} className="bg-white p-4 rounded-2xl border border-neutral-100 shadow-sm hover:shadow-md transition-all group">
                 {/* Priority + actions */}
@@ -318,8 +318,8 @@ const ProjectOverview: React.FC = () => {
 
   if (!project) return <div className="p-10 text-neutral-500 font-bold">Project not found</div>;
 
-  const totalBudget = financeEntries.reduce((sum, e) => sum + (e.type === 'income' ? e.amount : -e.amount), 0);
-  const tasksDone = tasks.filter(t => t.status === 'done').length;
+  const totalBudget = Array.isArray(financeEntries) ? financeEntries.reduce((sum, e) => sum + (e.type === 'income' ? e.amount : -e.amount), 0) : 0;
+  const tasksDone = Array.isArray(tasks) ? tasks.filter(t => t.status === 'done').length : 0;
 
   return (
     <div className="min-h-screen bg-white p-4 md:p-10 space-y-10 animate-in fade-in duration-500">
@@ -373,7 +373,7 @@ const ProjectOverview: React.FC = () => {
             <TrendingUp size={20} className="text-orange-500 opacity-30" />
           </div>
           <div>
-            <h3 className="text-3xl font-black text-neutral-900 tracking-tight">{tasksDone} / {tasks.length}</h3>
+            <h3 className="text-3xl font-black text-neutral-900 tracking-tight">{tasksDone} / {Array.isArray(tasks) ? tasks.length : 0}</h3>
             <p className="text-orange-600/60 font-bold uppercase tracking-widest text-[10px] mt-1">Tasks Completed</p>
           </div>
         </div>
@@ -416,19 +416,19 @@ const ProjectOverview: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <KanbanColumn
             id="todo" label="To Do" dot="bg-neutral-400"
-            tasks={tasks.filter(t => t.status === 'todo')}
+            tasks={Array.isArray(tasks) ? tasks.filter(t => t.status === 'todo') : []}
             users={users} onMove={handleMoveTask} onEdit={openEditTask} onDelete={handleDeleteTask}
             canManage={canManage} canDelete={canDelete} currentUserId={user?.id}
           />
           <KanbanColumn
             id="in_progress" label="In Progress" dot="bg-orange-500"
-            tasks={tasks.filter(t => t.status === 'in_progress')}
+            tasks={Array.isArray(tasks) ? tasks.filter(t => t.status === 'in_progress') : []}
             users={users} onMove={handleMoveTask} onEdit={openEditTask} onDelete={handleDeleteTask}
             canManage={canManage} canDelete={canDelete} currentUserId={user?.id}
           />
           <KanbanColumn
             id="done" label="Completed" dot="bg-green-500"
-            tasks={tasks.filter(t => t.status === 'done')}
+            tasks={Array.isArray(tasks) ? tasks.filter(t => t.status === 'done') : []}
             users={users} onMove={handleMoveTask} onEdit={openEditTask} onDelete={handleDeleteTask}
             canManage={canManage} canDelete={canDelete} currentUserId={user?.id}
           />
@@ -461,12 +461,12 @@ const ProjectOverview: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-neutral-100">
-                {financeEntries.length === 0 ? (
+                {!Array.isArray(financeEntries) || financeEntries.length === 0 ? (
                   <tr>
                     <td colSpan={4} className="px-8 py-10 text-center text-neutral-400 font-bold text-xs uppercase tracking-widest">No transactions logged</td>
                   </tr>
                 ) : (
-                  financeEntries.map((entry) => (
+                  Array.isArray(financeEntries) && financeEntries.map((entry) => (
                     <tr key={entry.id} className="hover:bg-white transition-colors">
                       <td className="px-8 py-5 text-sm font-bold text-neutral-900">{entry.description}</td>
                       <td className="px-8 py-5">

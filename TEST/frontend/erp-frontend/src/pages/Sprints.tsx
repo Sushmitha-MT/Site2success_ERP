@@ -57,11 +57,11 @@ const Sprints: React.FC = () => {
   const canManageOptions = user?.role === 'super_admin' || user?.role === 'project_manager';
 
   // Group sprints by project
-  const sprintsByProject = sprints?.reduce((acc: any, sprint: any) => {
+  const sprintsByProject = Array.isArray(sprints) ? sprints.reduce((acc: any, sprint: any) => {
     if (!acc[sprint.project_id]) acc[sprint.project_id] = [];
     acc[sprint.project_id].push(sprint);
     return acc;
-  }, {});
+  }, {}) : {};
 
   return (
     <div className="space-y-8">

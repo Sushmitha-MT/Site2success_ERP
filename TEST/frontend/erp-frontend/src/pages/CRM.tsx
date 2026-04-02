@@ -322,7 +322,7 @@ const CRM: React.FC = () => {
                     <td className="px-8 py-5 h-16 bg-neutral-50/20" colSpan={5} />
                   </tr>
                 ))
-              ) : clients?.length > 0 ? (
+              ) : Array.isArray(clients) && clients.length > 0 ? (
                 clients.map((c: any) => (
                   <tr key={c.id} className="hover:bg-neutral-50/50 transition-colors group">
                     <td className="px-8 py-6">
