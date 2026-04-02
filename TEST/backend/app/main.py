@@ -76,11 +76,9 @@ app = FastAPI(
 )
 
 # Allowed origins for CORS
-ALLOWED_ORIGINS = [
-    "https://site2success-erp-fpsl.vercel.app",
-    "http://localhost:5173",
-    "http://localhost:3000",
-]
+ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "https://site2success-erp-fpsl.vercel.app,http://localhost:5173,http://localhost:3000").split(",")
+if "*" in ALLOWED_ORIGINS:
+    ALLOWED_ORIGINS = ["*"]
 
 # Allow the React frontend to call this API
 app.add_middleware(

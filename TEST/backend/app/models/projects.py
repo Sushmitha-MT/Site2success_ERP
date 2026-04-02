@@ -19,9 +19,9 @@ class Project(Base, TimestampMixin):
 
     manager_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
 
-    status = Column(Enum(ProjectStatus))
+    status = Column(Enum(ProjectStatus, native_enum=False, create_constraint=False))
 
-    project_type = Column(Enum(ProjectType), default=ProjectType.project)
+    project_type = Column(Enum(ProjectType, native_enum=False, create_constraint=False), default=ProjectType.project)
 
     start_date = Column(Date)
 

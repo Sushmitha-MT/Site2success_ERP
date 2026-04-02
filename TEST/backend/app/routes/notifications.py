@@ -21,7 +21,7 @@ def get_notifications(
     """
     notifications = (
         db.query(Notification)
-        .filter(Notification.user_id == str(current_user["user_id"]))
+        .filter(Notification.user_id == uuid.UUID(current_user["user_id"]))
         .order_by(Notification.created_at.desc())
         .all()
     )

@@ -18,7 +18,10 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 def migrate():
     db = SessionLocal()
     try:
-        # 1. Ensure all tables exist (Base.metadata.create_all won't add columns to existing tables)
+        print("Importing models before create_all...")
+        import app.models # this triggers __init__.py which imports all models
+        
+        
         print("Ensuring tables exist...")
         Base.metadata.create_all(bind=engine)
 

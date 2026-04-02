@@ -39,9 +39,9 @@ class Task(Base, TimestampMixin):
 
     order_index = Column(Integer)
 
-    status = Column(Enum(TaskStatus))
+    status = Column(Enum(TaskStatus, native_enum=False, create_constraint=False))
 
-    priority = Column(Enum(TaskPriority))
+    priority = Column(Enum(TaskPriority, native_enum=False, create_constraint=False))
 
     assignee_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
 
