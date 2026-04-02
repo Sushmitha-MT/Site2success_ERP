@@ -24,20 +24,45 @@ def migrate():
 
         inspector = inspect(engine)
         
-        # 2. Check for missing columns in 'users' table
-        columns = [c['name'] for c in inspector.get_columns('users')]
-        
-        if 'github_username' not in columns:
-            print("Adding 'github_username' column to 'users' table...")
-            db.execute(text("ALTER TABLE users ADD COLUMN github_username VARCHAR UNIQUE"))
-            db.commit()
-            print("Column added successfully.")
-        
-        if 'workspace_enabled' not in columns:
-            print("Adding 'workspace_enabled' column to 'users' table...")
-            db.execute(text("ALTER TABLE users ADD COLUMN workspace_enabled BOOLEAN DEFAULT TRUE"))
-            db.commit()
-            print("Column added successfully.")
+        # ─── Table: users ──────────────────────────────────
+        if 'users' in inspector.get_table_names():
+            columns = [c['name'] for c in inspector.get_columns('users')]
+            if 'github_username' not in columns:
+                print("Adding 'github_username' column to 'users' table...")
+                db.execute(text("ALTER TABLE users ADD COLUMN github_username VARCHAR UNIQUE"))
+                db.commit()
+            if 'workspace_enabled' not in columns:
+                print("Adding 'workspace_enabled' column to 'users' table...")
+                db.execute(text("ALTER TABLE users ADD COLUMN workspace_enabled BOOLEAN DEFAULT TRUE"))
+                db.commit()
+
+        # ─── Table: notifications ─────────────────────────
+        if 'notifications' in inspector.get_table_names():
+            columns = [c['name'] for c in inspector.get_columns('notifications')]
+            if 'is_read' not in columns:
+                print("Adding 'is_read' column to 'notifications' table...")
+                db.execute(text("ALTER TABLE notifications ADD COLUMN is_read BOOLEAN DEFAULT FALSE"))
+                db.commit()
+
+        # ─── Table: finance_entries ───────────────────────
+        if 'finance_entries' in inspector.get_table_names():
+            columns = [c['name'] for c in inspector.get_columns('finance_entries')]
+            if 'is_client_advance' not in columns:
+                print("Adding 'is_client_advance' column to 'finance_entries' table...")
+                db.execute(text("ALTER TABLE finance_entries ADD COLUMN is_client_advance BOOLEAN DEFAULT FALSE"))
+                db.commit()
+
+        # ─── Table: projects ──────────────────────────────
+        if 'projects' in inspector.get_table_names():
+            columns = [c['name'] for c in inspector.get_columns('projects')]
+            if 'status' not in columns:
+                print("Adding 'status' column to 'projects' table...")
+                db.execute(text("ALTER TABLE projects ADD COLUMN status VARCHAR"))
+                db.commit()
+            if 'project_type' not in columns:
+                print("Adding 'project_type' column to 'projects' table...")
+                db.execute(text("ALTER TABLE projects ADD COLUMN project_type VARCHAR DEFAULT 'project'"))
+                db.commit()
 
         # 3. Create a default Super Admin if no users exist
         print("Checking for existing users...")
