@@ -67,25 +67,42 @@ def migrate():
         # 3. Create a default Super Admin if no users exist
         print("Checking for existing users...")
         user_count = db.execute(text("SELECT COUNT(*) FROM users")).scalar()
-        if user_count == 0:
-            print("No users found. Seeding default super_admin...")
-            admin_id = str(uuid.uuid4())
-            hpwd = pwd_context.hash("admin123")
-            db.execute(text(
-                "INSERT INTO users (id, email, password_hash, full_name, role, is_active, created_at, updated_at) "
-                "VALUES (:id, :email, :hpwd, :name, :role, :active, NOW(), NOW())"
-            ), {
-                "id": admin_id,
-                "email": "admin@erp.com",
-                "hpwd": hpwd,
-                "name": "Global Administrator",
-                "role": "super_admin",
-                "active": True
-            })
+        # 3. Create or Update Core Admin Users
+        print("Ensuring core admin users exist with correct passwords...")
+        core_users = [
+            {"email": "rahul@erp.com", "password": "rahul123", "name": "Rahul", "role": "super_admin"},
+            {"email": "dhanush@erp.com", "password": "dhanush123", "name": "Dhanush", "role": "super_admin"},
+        ]
+
+        for u in core_users:
+            hpwd = pwd_context.hash(u["password"])
+            # Check if user exists
+            existing = db.execute(text("SELECT id FROM users WHERE email = :email"), {"email": u["email"]}).fetchone()
+            
+            if existing:
+                print(f"Updating password for existing user: {u['email']}")
+                db.execute(text(
+                    "UPDATE users SET password_hash = :hpwd, full_name = :name, role = :role, updated_at = NOW() "
+                    "WHERE email = :email"
+                ), {
+                    "hpwd": hpwd,
+                    "name": u["name"],
+                    "role": u["role"],
+                    "email": u["email"]
+                })
+            else:
+                print(f"Creating new core user: {u['email']}")
+                db.execute(text(
+                    "INSERT INTO users (id, email, password_hash, full_name, role, is_active, created_at, updated_at) "
+                    "VALUES (:id, :email, :hpwd, :name, :role, True, NOW(), NOW())"
+                ), {
+                    "id": str(uuid.uuid4()),
+                    "email": u["email"],
+                    "hpwd": hpwd,
+                    "name": u["name"],
+                    "role": u["role"]
+                })
             db.commit()
-            print("Default super_admin (admin@erp.com / admin123) created.")
-        else:
-            print(f"Database already has {user_count} users.")
 
         print("Migration and Seeding complete.")
 
