@@ -1,0 +1,74 @@
+[
+    {
+        "email": "ram@erp.com",
+        "name": "Ram",
+        "role": "manager",
+        "password": "member123"
+    },
+    {
+        "email": "kushi@erp.com",
+        "name": "Kushi",
+        "role": "manager",
+        "password": "member123"
+    },
+    {
+        "email": "sushmitha@erp.com",
+        "name": "Sushmitha",
+        "role": "employee",
+        "password": "member123"
+    },
+    {
+        "email": "leelavathi@erp.com",
+        "name": "Leelavathi",
+        "role": "employee",
+        "password": "member123"
+    },
+    {
+        "email": "sandra@erp.com",
+        "name": "Sandra",
+        "role": "employee",
+        "password": "member123"
+    },
+    {
+        "email": "karline@erp.com",
+        "name": "Karline",
+        "role": "employee",
+        "password": "member123"
+    },
+    {
+        "email": "medansh@erp.com",
+        "name": "Medansh",
+        "role": "employee",
+        "password": "member123"
+    },
+    {
+        "email": "adithya@erp.com",
+        "name": "Adithya",
+        "role": "employee",
+        "password": "member123"
+    },
+    {
+        "email": "alen@erp.com",
+        "name": "Alen",
+        "role": "employee",
+        "password": "member123"
+    },
+    {
+        "email": "neha@erp.com",
+        "name": "Neha",
+        "role": "employee",
+        "password": "member123"
+    },
+    {
+        "email": "rahul@erp.com",
+        "name": "Rahul",
+        "role": "super_admin",
+        "password": "member123"
+    },
+    {
+        "email": "dhanush@erp.com",
+        "name": "Dhanush",
+        "role": "super_admin",
+        "password": "member123"
+    }
+]

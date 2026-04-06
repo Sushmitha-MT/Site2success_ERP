@@ -156,8 +156,18 @@ def migrate():
         # 3. Create or Update Core Admin Users
         print("Ensuring core admin users exist with correct passwords...", flush=True)
         core_users = [
-            {"email": "rahul@erp.com", "password": "rahul123", "name": "Rahul", "role": "super_admin"},
-            {"email": "dhanush@erp.com", "password": "dhanush123", "name": "Dhanush", "role": "super_admin"},
+            {"email": "ram@erp.com", "password": "member123", "name": "Ram", "role": "manager"},
+            {"email": "kushi@erp.com", "password": "member123", "name": "Kushi", "role": "manager"},
+            {"email": "sushmitha@erp.com", "password": "member123", "name": "Sushmitha", "role": "employee"},
+            {"email": "leelavathi@erp.com", "password": "member123", "name": "Leelavathi", "role": "employee"},
+            {"email": "sandra@erp.com", "password": "member123", "name": "Sandra", "role": "employee"},
+            {"email": "karline@erp.com", "password": "member123", "name": "Karline", "role": "employee"},
+            {"email": "medansh@erp.com", "password": "member123", "name": "Medansh", "role": "employee"},
+            {"email": "adithya@erp.com", "password": "member123", "name": "Adithya", "role": "employee"},
+            {"email": "alen@erp.com", "password": "member123", "name": "Alen", "role": "employee"},
+            {"email": "neha@erp.com", "password": "member123", "name": "Neha", "role": "employee"},
+            {"email": "rahul@erp.com", "password": "member123", "name": "Rahul", "role": "super_admin"},
+            {"email": "dhanush@erp.com", "password": "member123", "name": "Dhanush", "role": "super_admin"},
         ]
 
         for u in core_users:
